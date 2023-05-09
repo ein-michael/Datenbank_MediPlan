@@ -1,5 +1,6 @@
 package hsnr.clemens.datenbank_grundlage;
 
+import android.sax.StartElementListener;
 import android.util.Log;
 import java.util.Date;
 import android.content.ContentValues;
@@ -418,24 +419,25 @@ public class DB_Tools extends SQLiteOpenHelper {
     }
 
     //Methode um eine neue Stammmedikation hinzuzufügen. Muss noch überarbeitet werden um n-m-Beziehungen abbilden zu können.
-    public void stammMediNeu(int pzn, String hannam, float dosisstaerk, int inheit, int darrform, String nebenwirk, String einnhinweis, float packgroess, int einneinh, int wirkber, int wirkstoff){
+    public void stammMediNeu(int MedID, int PZN, String Handelsname, float Starke_Dosis, int Einheit, int Darreichungsform, String Nebenwirkung, String EinnHinweis, float PackGroesse, int EinnEinheit){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         Date jetze = new Date();
 
-        cv.put(MDB_COLUMN_PZN,pzn);
+        cv.put(MDB_COLUMN_MEDID, MedID);
+        cv.put(MDB_COLUMN_PZN,PZN);
         cv.put(MDB_COLUMN_ZULETZTBEARB,jetze.getTime()/1000L);
-        cv.put(MDB_COLUMN_HANDELSNAME,hannam);
-        cv.put(MDB_COLUMN_STAERKEDOSIS,dosisstaerk);
-        cv.put(MDB_COLUMN_EINHEIT,inheit);
-        cv.put(MDB_COLUMN_DARREICHNUNGSFORM,darrform);
-        cv.put(MDB_COLUMN_NEBENWIRKUNG,nebenwirk);
-        cv.put(MDB_COLUMN_EINNHINWEIS,einnhinweis);
-        cv.put(MDB_COLUMN_PACKGROESSE,packgroess);
-        cv.put(MDB_COLUMN_EINNEINHEIT,einneinh);
+        cv.put(MDB_COLUMN_HANDELSNAME,Handelsname);
+        cv.put(MDB_COLUMN_STAERKEDOSIS,Starke_Dosis);
+        cv.put(MDB_COLUMN_EINHEIT,Einheit);
+        cv.put(MDB_COLUMN_DARREICHNUNGSFORM,Darreichungsform);
+        cv.put(MDB_COLUMN_NEBENWIRKUNG,Nebenwirkung);
+        cv.put(MDB_COLUMN_EINNHINWEIS,EinnHinweis);
+        cv.put(MDB_COLUMN_PACKGROESSE,PackGroesse);
+        cv.put(MDB_COLUMN_EINNEINHEIT,EinnEinheit);
         long daKey = db.insert(MDB_TABLE_NAME,null,cv);
 
-        cv = new ContentValues();
+     /*   cv = new ContentValues();
         cv.put(WIF_COLUMN_MEDID,daKey);
         cv.put(WIF_COLUMN_WIRKBERID,wirkber);
         db.insert(WIF_TABLE_NAME,null,cv);
@@ -443,7 +445,7 @@ public class DB_Tools extends SQLiteOpenHelper {
         cv = new ContentValues();
         cv.put(ENT_COLUMN_MEDID,daKey);
         cv.put(ENT_COLUMN_WIRKSTOFFID,wirkstoff);
-        db.insert(ENT_TABLE_NAME,null,cv);
+        db.insert(ENT_TABLE_NAME,null,cv); */
 
     }
 
@@ -494,7 +496,7 @@ public class DB_Tools extends SQLiteOpenHelper {
     // region Medikamente_Methoden
 
     //Gibt das zu der eingegebenen PZN passende Medikament zurück
-    public Medikament MedikamentZuPzn(int pzn){
+    /*public Medikament MedikamentZuPzn(int pzn){
         //SQL Lite Abfrage
         String PZNabfrage = "SELECT * FROM " + MDB_TABLE_NAME + " WHERE "+ MDB_COLUMN_PZN + " = " + pzn;
 
@@ -523,6 +525,60 @@ public class DB_Tools extends SQLiteOpenHelper {
         else {
             // Kein Treffer gefunden
             return null;
+        }
+    }*/
+
+    public void MedikamentZuPzn(int pzn){
+        //SQL Befehl in String gespeichert
+        String PZNabfrage = "SELECT * FROM " + MDB_TABLE_NAME + " WHERE "+ MDB_COLUMN_PZN + " = '" + pzn +"'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor abf = db.rawQuery(PZNabfrage,null);
+
+        //lokale Variablen
+        int MedID;
+        int PZN;
+        long ZuletztBearb;
+        String Handelsname;
+        float Staerke_Dosis;
+        int Einheit;
+        int Darreichungsform;
+        String Nebenwirkung;
+        String EinnHinweis;
+        float PackGroesse;
+        int EinnEinheit;;
+
+        //Wenn Medikament/PZN in Datenbank vorhanden ist, dann lese die Zeile aus und speichert diese in den lokalen Variablen
+        if (abf.moveToFirst()) {
+            MedID = abf.getInt(0);
+            PZN = abf.getInt(1);
+            ZuletztBearb = abf.getLong(2);
+            Handelsname = abf.getString(3);
+            Staerke_Dosis = abf.getFloat(4);
+            Einheit = abf.getInt(5);
+            Darreichungsform = abf.getInt(6);
+            Nebenwirkung = abf.getString(7);
+            EinnHinweis = abf.getString(8);
+            PackGroesse = abf.getFloat(9);
+            EinnEinheit = abf.getInt(10);
+
+            //TESTZWECKE: Gibt die gespeicherten Daten in Variablen im Log wieder
+            Log.d("MediAbfrage", "Folgendes Medikament wurde gefunden!");
+            Log.d("MediAbfrage", "MedID: " + MedID);
+            Log.d("MediAbfrage", "PZN: " + PZN);
+            Log.d("MediAbfrage", "Zuletzt Bearbeitet: " + ZuletztBearb);
+            Log.d("MediAbfrage", "Handelsname: " + Handelsname);
+            Log.d("MediAbfrage", "Staerke Dosis: " + Staerke_Dosis);
+            Log.d("MediAbfrage", "Einheit: " + Einheit);
+            Log.d("MediAbfrage", "Darreichungsform: " + Darreichungsform);
+            Log.d("MediAbfrage", "Nebenwirkung: " + Nebenwirkung);
+            Log.d("MediAbfrage", "EinnHinweis: " + EinnHinweis);
+            Log.d("MediAbfrage", "PackGroesse: " + PackGroesse);
+            Log.d("MediAbfrage", "EinnEinheit " + EinnEinheit);
+        } else {
+            //Fehlermeldung, wenn Medikament/PZN in Datenbank nicht vorhanden
+            Log.e("MediAbfrage", "Medikament mit der PZN " + pzn +" wurde nicht gefunden!");
         }
     }
 
@@ -630,7 +686,7 @@ public class DB_Tools extends SQLiteOpenHelper {
             AnlageDat = cursor.getLong(4);
             Arzt = cursor.getInt(5);
 
-            //Ausgabe des Users mit den einzelnen Variablen im Log
+            //TESTZWECKE: Ausgabe des Users mit den einzelnen Variablen im Log
             Log.d("UserAbfrage", "UserID: " + UserID);
             Log.d("UserAbfrage", "NutzerName: " + NutzerName);
             Log.d("UserAbfrage", "NutzerVorname: " + NutzerVorname);
