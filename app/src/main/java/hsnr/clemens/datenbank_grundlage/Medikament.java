@@ -6,25 +6,43 @@ public class Medikament extends DatabaseObject {
     public long ZuletztBearb;
     public String Handelsname;
     public float Staerke_Dosis;
-    public int Einheit;
-    public int Darreichungsform;
+    public Einheit Einheit;
+    public DarreichungsForm Darreichungsform;
     public String Nebenwirkung;
     public String EinnHinweis;
     public float PackGroesse;
-    public int EinnEinheit;
+    public EinnEinheit EinnEinheit;
+    public Wirkstoff[] Wirkstoffe;
+    public Wirkbereich[] Wirkbereiche;
+    public boolean isValid;
 
-    public Medikament(int MedID, int PZN, long ZuletztBearb, String Handelsname, float Starke_Dosis, int Einheit, int Darreichungsform, String Nebenwirkung, String EinnHinweis, float PackGroesse, int EinnEinheit)
-    {
-        this.MedID = MedID;
+    public Medikament(){
+    }
+
+    public Medikament(
+            int PZN,
+            long ZuletztBearb,
+            float Staerke_Dosis,
+            Einheit Einheit,
+            DarreichungsForm Darreichungsform,
+            String Nebenwirkung,
+            String EinnHinweis,
+            float PackGroese,
+            EinnEinheit EinnEinheit,
+            Wirkstoff[] Wirkstoffe,
+            Wirkbereich[] Wirkbereiche
+    ){
         this.PZN = PZN;
         this.ZuletztBearb = ZuletztBearb;
-        this.Handelsname = Handelsname;
-        this.Staerke_Dosis = Starke_Dosis;
+        this.Staerke_Dosis = Staerke_Dosis;
         this.Einheit = Einheit;
         this.Darreichungsform = Darreichungsform;
         this.Nebenwirkung = Nebenwirkung;
         this.EinnHinweis = EinnHinweis;
-        this.PackGroesse = PackGroesse;
+        this.PackGroesse = PackGroese;
         this.EinnEinheit = EinnEinheit;
+        this.Wirkstoffe = Wirkstoffe;
+        this.Wirkbereiche = Wirkbereiche;
     }
+
 }

@@ -1,3 +1,4 @@
+
 package hsnr.clemens.datenbank_grundlage;
 
 public class User extends DatabaseObject {
@@ -6,11 +7,13 @@ public class User extends DatabaseObject {
     public String NutzerVorname;
     public long Geburtstag;
     public long AnlageDat;
-    public int Arzt;
+    public Arzt Arzt;
+    public boolean isValid;
 
-    public User(int UserID, String NutzerName, String NutzerVorname, long Geburtstag, long AnlageDat, int Arzt)
-    {
-        this.UserID = UserID;
+    public User(){
+    }
+
+    public User(String NutzerName, String NutzerVorname, long Geburtstag, long AnlageDat, Arzt Arzt){
         this.NutzerName = NutzerName;
         this.NutzerVorname = NutzerVorname;
         this.Geburtstag = Geburtstag;

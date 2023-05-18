@@ -1,6 +1,5 @@
 package hsnr.clemens.datenbank_grundlage;
 
-import android.sax.StartElementListener;
 import android.util.Log;
 import java.util.Date;
 import android.content.ContentValues;
@@ -38,6 +37,7 @@ public class DB_Tools extends SQLiteOpenHelper {
     private static final String MDB_COLUMN_EINNHINWEIS = "EinnHinweis";
     private static final String MDB_COLUMN_PACKGROESSE = "PackGroesse";
     private static final String MDB_COLUMN_EINNEINHEIT = "EinnEinheit";
+    private static final String MDB_COLUMN_ISVALID = "isValid";
     // endregion MedBib
 
     // region enthaelt
@@ -52,6 +52,7 @@ public class DB_Tools extends SQLiteOpenHelper {
 
     private static final String EIH_COLUMN_EINID = "EinID";
     private static final String EIH_COLUMN_EINHEIT = "Einheit";
+    private static final String EIH_COLUMN_ISVALID = "isValid";
     // endregion Einheit
 
     // region EinnEinheit
@@ -59,6 +60,7 @@ public class DB_Tools extends SQLiteOpenHelper {
 
     private static final String EIN_COLUMN_EINNEINHEITID = "EinnEinheitID";
     private static final String EIN_COLUMN_EINHEIT = "Einheit";
+    private static final String EIN_COLUMN_ISVALID = "isValid";
     // endregion EinnEinheit
 
     // region Wirkstoff
@@ -66,6 +68,7 @@ public class DB_Tools extends SQLiteOpenHelper {
 
     private static final String WIS_COLUMN_WIRKSTOFFID = "WirkstoffID";
     private static final String WIS_COLUMN_BEZEICHNUNG = "Bezeichnung";
+    private static final String WIS_COLUMN_ISVALID = "isValid";
     // endregion Wirkstoff
 
     // region wirktFuer
@@ -80,6 +83,7 @@ public class DB_Tools extends SQLiteOpenHelper {
 
     private static final String WIB_COLUMN_WIRKBERID = "WirkBerID";
     private static final String WIB_COLUMN_BEZEICHNUNG = "Bezeichnung";
+    private static final String WIB_COLUMN_ISVALID = "isValid";
     // endregion Wirkbereich
 
     // region Darreichungsform
@@ -87,6 +91,7 @@ public class DB_Tools extends SQLiteOpenHelper {
 
     private static final String DAF_COLUMN_DARRID = "DarrID";
     private static final String DAF_COLUMN_BEZEICHNUNG = "Bezeichnung";
+    private static final String DAF_COLUMN_ISVALID = "isValid";
     // endregion Darreichungsform
 
     // region Anordnung
@@ -109,7 +114,9 @@ public class DB_Tools extends SQLiteOpenHelper {
     private static final String ANO_COLUMN_ENDZEITP = "Endzeitp";
     private static final String ANO_COLUMN_USER = "User";
     private static final String ANO_COLUMN_MEDIKAMENT = "Medikament";
+    private static final String ANO_COLUMN_ARZT = "Arzt";
     private static final String ANO_COLUMN_EINNMAX = "EinMax";
+    private static final String ANO_COLUMN_ISVALID = "isValid";
     // endregion Anordung
 
     // region Arzt
@@ -118,6 +125,8 @@ public class DB_Tools extends SQLiteOpenHelper {
     private static final String ARZ_COLUMN_ARZTID = "ArztID";
     private static final String ARZ_COLUMN_FACHRICHTUNG = "Fachrichtung";
     private static final String ARZ_COLUMN_NAME = "Name";
+    private static final String ARZ_COLUMN_ISVALID = "isValid";
+
     //endregion Arzt
 
     // region Fachrichtung
@@ -125,6 +134,7 @@ public class DB_Tools extends SQLiteOpenHelper {
 
     private static final String FAC_COLUMN_FACHRICHTUNGID = "FachrichtungID";
     private static final String FAC_COLUMN_BEZEICHNUNG = "Bezeichnung";
+    private static final String FAC_COLUMN_ISVALID = "isValid";
     // endregion Fachrichtung
 
     // region Rhythmus
@@ -135,6 +145,7 @@ public class DB_Tools extends SQLiteOpenHelper {
     private static final String RHY_COLUMN_WOCHENTAGE = "Wochentage";
     private static final String RHY_COLUMN_SCHEMAAKTIV = "SchemaAktiv";
     private static final String RHY_COLUMN_SCHEMAINAKTIV = "SchemaInaktiv";
+    private static final String RHY_COLUMN_ISVALID = "isValid";
     // endregion Rhythmus
 
     // region hatRhythmus
@@ -153,6 +164,7 @@ public class DB_Tools extends SQLiteOpenHelper {
     private static final String USR_COLUMN_GEBURTSTAG = "Geburtstag";
     private static final String USR_COLUMN_ANLEGEDAT = "AnlegeDat";
     private static final String USR_COLUMN_ARZT = "Arzt";
+    private static final String USR_COLUMN_ISVALID = "isValid";
 
     //endregion User
 
@@ -168,6 +180,7 @@ public class DB_Tools extends SQLiteOpenHelper {
     private static final String EDO_COLUMN_GENOMMEN = "Genommen";
     private static final String EDO_COLUMN_BEMERKUNG = "Bemerkung";
     private static final String EDO_COLUMN_KOMMENTAR = "Kommentar";
+    private static final String EDO_COLUMN_ISVALID = "isValid";
     //endregion EinnahmeDoku
 
     // region Tagebucheintrag
@@ -177,6 +190,7 @@ public class DB_Tools extends SQLiteOpenHelper {
     private static final String TAG_COLUMN_ANLAGEDAT = "AnlageDat";
     private static final String TAG_COLUMN_USER = "User";
     private static final String TAG_COLUMN_EINTRAG = "Eintrag";
+    private static final String TAG_COLUMN_ISVALID = "isValid";
     //endregion Tagebucheintrag
 
     // endregion Namensdefinitionen
@@ -203,13 +217,15 @@ public class DB_Tools extends SQLiteOpenHelper {
                         MDB_COLUMN_NEBENWIRKUNG + " TEXT, " +
                         MDB_COLUMN_EINNHINWEIS + " TEXT, " +
                         MDB_COLUMN_PACKGROESSE + " FLOAT, " +
-                        MDB_COLUMN_EINNEINHEIT + " INTEGER NOT NULL); ";
+                        MDB_COLUMN_EINNEINHEIT + " INTEGER NOT NULL,"+
+                        MDB_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_MDB);
 
         String query_WIS =
                 "CREATE TABLE " + WIS_TABLE_NAME +
                         " (" + WIS_COLUMN_WIRKSTOFFID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        WIS_COLUMN_BEZEICHNUNG + " TEXT NOT NULL); ";
+                        WIS_COLUMN_BEZEICHNUNG + " TEXT NOT NULL,"+
+                        WIS_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_WIS);
 
         String query_ENT =
@@ -223,13 +239,15 @@ public class DB_Tools extends SQLiteOpenHelper {
         String query_EIH =
                 "CREATE TABLE " + EIH_TABLE_NAME +
                         " (" + EIH_COLUMN_EINID + " INTEGER  PRIMARY KEY AUTOINCREMENT, " +
-                        EIH_COLUMN_EINHEIT + " TEXT NOT NULL); ";
+                        EIH_COLUMN_EINHEIT + " TEXT NOT NULL,"+
+                        EIH_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_EIH);
 
         String query_WIB =
                 "CREATE TABLE " + WIB_TABLE_NAME +
                         " (" + WIB_COLUMN_WIRKBERID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        WIB_COLUMN_BEZEICHNUNG + " TEXT NOT NULL); ";
+                        WIB_COLUMN_BEZEICHNUNG + " TEXT NOT NULL,"+
+                        WIB_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_WIB);
 
         String query_WIF =
@@ -243,13 +261,15 @@ public class DB_Tools extends SQLiteOpenHelper {
         String query_DAF =
                 "CREATE TABLE " + DAF_TABLE_NAME +
                         " (" + DAF_COLUMN_DARRID + " INTEGER  PRIMARY KEY AUTOINCREMENT, " +
-                        DAF_COLUMN_BEZEICHNUNG + " TEXT NOT NULL); ";
+                        DAF_COLUMN_BEZEICHNUNG + " TEXT NOT NULL,"+
+                        DAF_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_DAF);
 
         String query_EIN =
                 "CREATE TABLE " + EIN_TABLE_NAME +
                         " (" + EIN_COLUMN_EINNEINHEITID + " INTEGER  PRIMARY KEY AUTOINCREMENT, " +
-                        EIN_COLUMN_EINHEIT + " TEXT NOT NULL); ";
+                        EIN_COLUMN_EINHEIT + " TEXT NOT NULL,"+
+                        EIN_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_EIN);
 
         String query_ANO =
@@ -270,8 +290,9 @@ public class DB_Tools extends SQLiteOpenHelper {
                         ANO_COLUMN_ABZUR + " FLOAT," +
                         ANO_COLUMN_ABNACH + " FLOAT," +
                         ANO_COLUMN_NACHT + " FLOAT," +
-                        ANO_COLUMN_NICHTEXAKT + " FLOAT," +
-                        ANO_COLUMN_EINNMAX + " FLOAT);";
+                        ANO_COLUMN_NICHTEXAKT + " BOOLEAN," +
+                        ANO_COLUMN_EINNMAX + " FLOAT,"+
+                        ANO_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_ANO);
 
         String query_RYH =
@@ -280,7 +301,8 @@ public class DB_Tools extends SQLiteOpenHelper {
                         RHY_COLUMN_ALLXTAGE + " INTEGER," +
                         RHY_COLUMN_WOCHENTAGE + " INTEGER," +
                         RHY_COLUMN_SCHEMAAKTIV + " INTEGER," +
-                        RHY_COLUMN_SCHEMAINAKTIV + " INTEGER);";
+                        RHY_COLUMN_SCHEMAINAKTIV + " INTEGER,"+
+                        RHY_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_RYH);
 
         String query_HRH =
@@ -295,13 +317,15 @@ public class DB_Tools extends SQLiteOpenHelper {
                 "CREATE TABLE " + ARZ_TABLE_NAME +
                         "("+ ARZ_COLUMN_ARZTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         ARZ_COLUMN_FACHRICHTUNG + " INTEGER," +
-                        ARZ_COLUMN_NAME + " TEXT);";
+                        ARZ_COLUMN_NAME + " TEXT,"+
+                        ARZ_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_ARZ);
 
         String query_FAC =
                 "CREATE TABLE " + FAC_TABLE_NAME +
                         "("+ FAC_COLUMN_FACHRICHTUNGID +" INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        FAC_COLUMN_BEZEICHNUNG + " TEXT NOT NULL);";
+                        FAC_COLUMN_BEZEICHNUNG + " TEXT NOT NULL,"+
+                        FAC_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_FAC);
 
         String query_USR =
@@ -311,7 +335,8 @@ public class DB_Tools extends SQLiteOpenHelper {
                         USR_COLUMN_NUTZERVORNAME + " TEXT NOT NULL," +
                         USR_COLUMN_GEBURTSTAG + " LONG," +
                         USR_COLUMN_ANLEGEDAT + " LONG NOT NULL," +
-                        USR_COLUMN_ARZT + " INTEGER);";
+                        USR_COLUMN_ARZT + " INTEGER,"+
+                        USR_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_USR);
 
         String query_EDO =
@@ -325,7 +350,8 @@ public class DB_Tools extends SQLiteOpenHelper {
                         EDO_COLUMN_ANORDNUNG + " INTEGER," +
                         EDO_COLUMN_GENOMMEN + " BOOLEAN," +
                         EDO_COLUMN_BEMERKUNG + " TEXT," +
-                        EDO_COLUMN_KOMMENTAR + " TEXT);";
+                        EDO_COLUMN_KOMMENTAR + " TEXT,"+
+                        EDO_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_EDO);
 
         String query_TAG =
@@ -333,8 +359,9 @@ public class DB_Tools extends SQLiteOpenHelper {
                         "("+ TAG_COLUMN_EINTRAGID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         TAG_COLUMN_EINTRAGTAG + " LONG NOT NULL," +
                         TAG_COLUMN_ANLAGEDAT + " LONG NOT NULL," +
-                        TAG_COLUMN_USER + " LONG NOT NULL," +
-                        TAG_COLUMN_EINTRAG + " TEXT NOT NULL);";
+                        TAG_COLUMN_USER + " INTEGER NOT NULL," +
+                        TAG_COLUMN_EINTRAG + " TEXT NOT NULL,"+
+                        TAG_COLUMN_ISVALID + " BOOLEAN); ";
         db.execSQL(query_TAG);
     }
 
@@ -354,100 +381,7 @@ public class DB_Tools extends SQLiteOpenHelper {
 
     // region Test/Debug
 
-    //Druckt PZN, Handelsnamen & Nebenwirkungen aller gespeicherten Medikamente in die Konsole
-    //Daran kann man ganz gut sehen wie so eine Abfrage funktioniert
-    public void gibStammMedis(){
-        //Ein ganz normaler String wird mit einer SQL-Abfrage belegt.
-        String abfrgae = "SELECT * FROM MedBib";
-        //Ein SQLiteDatabase-Objekt wird erstellt, so können wir (in dem Fall lesend) auf die Datenbank zugreifen
-        SQLiteDatabase db = this.getReadableDatabase();
-        //Die oben erstellte Abfrage wird auf der Datenbank durchgeführt, das Ergenis wird in ein Objekt vom Typen Cursor gespeichert.
-        //Ein Cursor ist einach nur die Ergebnistabelle, die die Abfrage liefert.
-        Cursor erg = db.rawQuery(abfrgae,null);
-
-        //Eine Methode und Bedingung zugleich - die .moveFirst()-Methode setzt den cursor auf die erste Position, gibt aber auch einen bool-Wert zurück
-        //Das bedeutet wenn die Methode false zurückgibt, dann ist die Cursor Tabelle leer und wir können uns die Schleife sparen.
-        if(erg.moveToFirst()){
-            do{
-                //Hier gießen wir das SQL zu Java um. das .getInt legt den Datentyp, die 1 den Spaltenindex fest.
-                //Weil wir hier in der MedBib-Tabelle unterwegs sind wird hier also eine Variabel pzn mit dem Wert der aktuellen Cursorzeile mit dem pzn-Wert belegt.
-                int pzn = erg.getInt(1);
-                String hannam = erg.getString(3);
-                String NebWirk = erg.getString(7);
-                Log.d("CursorTyp", ""+pzn+" | "+ hannam+" | "+NebWirk);
-
-                //Gleiches Prinzi wie oben, der Cursor rückt eine Zeile weiter zu oder beendet die Schleife wenn er durch ist.
-            } while (erg.moveToNext());
-        }
-        //Am Ende muss der Cursor auch noch geschlossen werden.
-        erg.close();
-    }
-
-    //Druckt alle zu dem Primärschlüssel gehörigen Wirkstoffe in die Konsoloe
-    public int[] wasWirkstoff(int medID){
-        String abfrage = "SELECT * FROM enthalet WHERE "+ENT_COLUMN_MEDID+" = "+medID+";";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor erg = db.rawQuery(abfrage,null);
-
-        Log.d("CursorTyp", "--------------------------");
-        if(erg.moveToFirst()){
-            do{
-                int wirk = erg.getInt(1);
-                Log.d("CursorTyp", ""+wirk);
-
-            } while (erg.moveToNext());
-        }
-        erg.close();
-        return null;
-    }
-
-    //Zum testen, fügt Werte in die enthaelt-Tabelle ein
-    //Hier kann man gut sehen, wie wir Werte in die Datenbank schreiben
-    public void testInput(){
-        //Zuerst brauchen wir ein SQLiteDatabase-Objekt, mit dem wir schreibend auf die Datenbank zugreifen können.
-        SQLiteDatabase db = this.getWritableDatabase();
-        //Unsere Input-Werte speichern wir in ContentValues, das ist wie eine Liste mit Elementen, die jeweils aus einem String-Schlüssel und einem zugehörigem Wert bestehen.
-        //Der Wert kann verschiedene Datentypen haben, flaot, String, int, double, alles kein Problem, nur klassische timestamps gehen nicht, deswegen benutzen wir einen long-Wert mit der Unix-Zeit
-        ContentValues cv = new ContentValues();
-
-        //Mit .put() fügen wir einen neuen Wert hinzu, bestehend aus der Spaltenbezeichnung (Schlüssel) und in diesem Fall einer Zahl (dem Wert).
-        cv.put(ENT_COLUMN_MEDID,31);
-        cv.put(ENT_COLUMN_WIRKSTOFFID,3);
-
-        //Mit der .insert()-Methode werden die ContentValues in die Tabelle geschrieben. Dabei wird automatisch der jeweilige Wert in die Spalte geschrieben, die im Schlüssel steht.
-        db.insert(ENT_TABLE_NAME,null,cv);
-    }
-
-    //Methode um eine neue Stammmedikation hinzuzufügen. Muss noch überarbeitet werden um n-m-Beziehungen abbilden zu können.
-    public void stammMediNeu(int MedID, int PZN, String Handelsname, float Starke_Dosis, int Einheit, int Darreichungsform, String Nebenwirkung, String EinnHinweis, float PackGroesse, int EinnEinheit){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        Date jetze = new Date();
-
-        cv.put(MDB_COLUMN_MEDID, MedID);
-        cv.put(MDB_COLUMN_PZN,PZN);
-        cv.put(MDB_COLUMN_ZULETZTBEARB,jetze.getTime()/1000L);
-        cv.put(MDB_COLUMN_HANDELSNAME,Handelsname);
-        cv.put(MDB_COLUMN_STAERKEDOSIS,Starke_Dosis);
-        cv.put(MDB_COLUMN_EINHEIT,Einheit);
-        cv.put(MDB_COLUMN_DARREICHNUNGSFORM,Darreichungsform);
-        cv.put(MDB_COLUMN_NEBENWIRKUNG,Nebenwirkung);
-        cv.put(MDB_COLUMN_EINNHINWEIS,EinnHinweis);
-        cv.put(MDB_COLUMN_PACKGROESSE,PackGroesse);
-        cv.put(MDB_COLUMN_EINNEINHEIT,EinnEinheit);
-        long daKey = db.insert(MDB_TABLE_NAME,null,cv);
-
-     /*   cv = new ContentValues();
-        cv.put(WIF_COLUMN_MEDID,daKey);
-        cv.put(WIF_COLUMN_WIRKBERID,wirkber);
-        db.insert(WIF_TABLE_NAME,null,cv);
-
-        cv = new ContentValues();
-        cv.put(ENT_COLUMN_MEDID,daKey);
-        cv.put(ENT_COLUMN_WIRKSTOFFID,wirkstoff);
-        db.insert(ENT_TABLE_NAME,null,cv); */
-
-    }
+    //gerade nix hier...
 
     // endregion Test/Debug
 
@@ -493,32 +427,178 @@ public class DB_Tools extends SQLiteOpenHelper {
 
     // endregion UI-Hilfe
 
-    // region Medikamente_Methoden
+    // region Objekt zu ID
 
-    //Gibt das zu der eingegebenen PZN passende Medikament zurück
-    /*public Medikament MedikamentZuPzn(int pzn){
+    public Medikament MedikamentZuID(int id){
         //SQL Lite Abfrage
-        String PZNabfrage = "SELECT * FROM " + MDB_TABLE_NAME + " WHERE "+ MDB_COLUMN_PZN + " = " + pzn;
+        String abfrage = "SELECT * FROM " + MDB_TABLE_NAME + " WHERE "+ MDB_COLUMN_MEDID + " = " + id+" AND "+MDB_COLUMN_ISVALID+" = 1;";
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor abf = db.rawQuery(PZNabfrage,null);
+        Cursor abf = db.rawQuery(abfrage,null);
 
-        String ergebniss = null;
         if (abf.moveToFirst()) {
 
             Medikament md = new Medikament();
+
             md.MedID = abf.getInt(0);
             md.PZN = abf.getInt(1);
             md.ZuletztBearb = abf.getLong(2);
             md.Handelsname = abf.getString(3);
             md.Staerke_Dosis = abf.getFloat(4);
-            md.Einheit = abf.getInt(5);
-            md.Darreichungsform = abf.getInt(6);
+            md.Einheit = EinheitZuID(abf.getInt(5));
+            md.Darreichungsform = DarreichungsformZuID(abf.getInt(6));
             md.Nebenwirkung = abf.getString(7);
             md.EinnHinweis = abf.getString(8);
-            md.PAckGroesse = abf.getFloat(9);
-            md.EinnEInheit = abf.getInt(10);
+            md.PackGroesse = abf.getFloat(9);
+            md.EinnEinheit = EinnEinheitZuID(abf.getInt(10));
+            md.isValid = abf.getInt(11)==1; //kleiner Trick, booleans werden in SQLite als int gespeichert, 1=true
+
+            md.Wirkstoffe = WirkstoffeZuMedID(abf.getInt(0));
+            md.Wirkbereiche = WirkbereicheZuMedID(abf.getInt(0));
+            abf.close();
+
+            return md;
+        }
+        else {
+            // Kein Treffer gefunden
+            return null;
+        }
+    }
+    public Einheit EinheitZuID(int id) {
+        //SQL Lite Abfrage
+        String abfrage = "SELECT * FROM " + EIH_TABLE_NAME + " WHERE " + EIH_COLUMN_EINID + " = " + id + " AND " + EIH_COLUMN_ISVALID + " = 1;";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor Einheit_abf = db.rawQuery(abfrage, null);
+
+        if (Einheit_abf.moveToFirst()) {
+            Einheit einh = new Einheit();
+            einh.EinID = Einheit_abf.getInt(0);
+            einh.Einheit = Einheit_abf.getString(1);
+            einh.isValid = Einheit_abf.getInt(2)==1;
+            Einheit_abf.close();
+            return einh;
+        }
+        else return null;
+    }
+    public EinnEinheit EinnEinheitZuID(int id) {
+        //SQL Lite Abfrage
+        String abfrage = "SELECT * FROM " + EIN_TABLE_NAME + " WHERE " + EIN_COLUMN_EINNEINHEITID + " = " + id + " AND " + EIN_COLUMN_ISVALID + " = 1;";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor EinnEinheit_abf = db.rawQuery(abfrage, null);
+
+        if (EinnEinheit_abf.moveToFirst()) {
+            EinnEinheit einnEinh = new EinnEinheit();
+            einnEinh.EinnEinheitID = EinnEinheit_abf.getInt(0);
+            einnEinh.Einheit = EinnEinheit_abf.getString(1);
+            einnEinh.isValid = EinnEinheit_abf.getInt(2)==1;
+            EinnEinheit_abf.close();
+            return einnEinh;
+        }
+        else return null;
+    }
+    public DarreichungsForm DarreichungsformZuID(int id) {
+        //SQL Lite Abfrage
+        String abfrage = "SELECT * FROM " + DAF_TABLE_NAME + " WHERE " + DAF_COLUMN_DARRID + " = " + id + " AND " + DAF_COLUMN_ISVALID + " = 1;";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor Darreichungsform_abf = db.rawQuery(abfrage, null);
+
+        if (Darreichungsform_abf.moveToFirst()) {
+            DarreichungsForm darreich = new DarreichungsForm();
+            darreich.DarrID = Darreichungsform_abf.getInt(0);
+            darreich.Bezeichnung = Darreichungsform_abf.getString(1);
+            darreich.isValid = Darreichungsform_abf.getInt(2)==1;
+            Darreichungsform_abf.close();
+            return darreich;
+        }
+        else return null;
+    }
+    public Wirkstoff WirkstoffZuID(int id){
+        //SQL Lite Abfrage
+        String abfrage = "SELECT * FROM " + WIS_TABLE_NAME + " WHERE " + WIS_COLUMN_WIRKSTOFFID + " = " + id + " AND " + WIS_COLUMN_ISVALID + " = 1;";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor Wirkstoff_abf = db.rawQuery(abfrage, null);
+
+        if (Wirkstoff_abf.moveToFirst()) {
+            Wirkstoff wirkstoff = new Wirkstoff();
+            wirkstoff.WirkstoffID = Wirkstoff_abf.getInt(0);
+            wirkstoff.Bezeichnung = Wirkstoff_abf.getString(1);
+            wirkstoff.isValid = Wirkstoff_abf.getInt(2)==1;
+            Wirkstoff_abf.close();
+            return wirkstoff;
+        }
+        else return null;
+    }
+    public Wirkbereich WirkbereicZuID(int id){
+        //SQL Lite Abfrage
+        String abfrage = "SELECT * FROM " + WIB_TABLE_NAME + " WHERE " + WIB_COLUMN_WIRKBERID + " = " + id + " AND " + WIB_COLUMN_ISVALID + " = 1;";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor Wirkbereich_abf = db.rawQuery(abfrage, null);
+
+        if (Wirkbereich_abf.moveToFirst()) {
+            Wirkbereich wirkbereich = new Wirkbereich();
+            wirkbereich.WirkBerID = Wirkbereich_abf.getInt(0);
+            wirkbereich.Bezeichnung = Wirkbereich_abf.getString(1);
+            wirkbereich.isValid = Wirkbereich_abf.getInt(2)==1;
+            Wirkbereich_abf.close();
+            return wirkbereich;
+        }
+        else return null;
+    }
+
+    // endregion Objekt zu ID
+
+    // region Verbindungstabellen auslesen
+
+    public Wirkstoff[] WirkstoffeZuMedID(int id){
+        //SQL Lite Abfrage
+        String abfrage = "SELECT * FROM " + ENT_TABLE_NAME + " WHERE " + ENT_COLUMN_MEDID + " =  + id;";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor enthaelt_abf = db.rawQuery(abfrage, null);
+        if (enthaelt_abf.moveToFirst()) {
+            Wirkstoff[] wirkstoffe = new Wirkstoff[enthaelt_abf.getCount()];
+            do{
+                wirkstoffe[enthaelt_abf.getPosition()] = WirkstoffZuID(enthaelt_abf.getInt(1));
+            } while (enthaelt_abf.moveToNext());
+            return wirkstoffe;
+        }
+        else return null;
+    }
+    public Wirkbereich[] WirkbereicheZuMedID(int id){
+        //SQL Lite Abfrage
+        String abfrage = "SELECT * FROM " + WIF_TABLE_NAME + " WHERE " + WIF_COLUMN_MEDID + " =  + id;";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor wirkfuer_abf = db.rawQuery(abfrage, null);
+        if (wirkfuer_abf.moveToFirst()) {
+            Wirkbereich[] wirkbereiche = new Wirkbereich[wirkfuer_abf.getCount()];
+            do{
+                wirkbereiche[wirkfuer_abf.getPosition()] = WirkbereicZuID(wirkfuer_abf.getInt(1));
+            } while (wirkfuer_abf.moveToNext());
+            return wirkbereiche;
+        }
+        else return null;
+    }
+
+    // endregion Verbindungstabellen auslesen
+
+    // region Medikamente_Methoden
+
+    //Gibt das zu der eingegebenen PZN passende Medikament zurück
+    public Medikament MedikamentZuPzn(int pzn){
+        //SQL Lite Abfrage
+        String PZNabfrage = "SELECT * FROM " + MDB_TABLE_NAME + " WHERE "+ MDB_COLUMN_PZN + " = " + pzn+" AND "+MDB_COLUMN_ISVALID+" = 1;";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor abf = db.rawQuery(PZNabfrage,null);
+
+        if (abf.moveToFirst()) {
+
+            Medikament md = MedikamentZuID(abf.getInt(0));
             abf.close();
             return md;
         }
@@ -526,70 +606,39 @@ public class DB_Tools extends SQLiteOpenHelper {
             // Kein Treffer gefunden
             return null;
         }
-    }*/
-
-    public void MedikamentZuPzn(int pzn){
-        //SQL Befehl in String gespeichert
-        String PZNabfrage = "SELECT * FROM " + MDB_TABLE_NAME + " WHERE "+ MDB_COLUMN_PZN + " = '" + pzn +"'";
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor abf = db.rawQuery(PZNabfrage,null);
-
-        //lokale Variablen
-        int MedID;
-        int PZN;
-        long ZuletztBearb;
-        String Handelsname;
-        float Staerke_Dosis;
-        int Einheit;
-        int Darreichungsform;
-        String Nebenwirkung;
-        String EinnHinweis;
-        float PackGroesse;
-        int EinnEinheit;;
-
-        //Wenn Medikament/PZN in Datenbank vorhanden ist, dann lese die Zeile aus und speichert diese in den lokalen Variablen
-        if (abf.moveToFirst()) {
-            MedID = abf.getInt(0);
-            PZN = abf.getInt(1);
-            ZuletztBearb = abf.getLong(2);
-            Handelsname = abf.getString(3);
-            Staerke_Dosis = abf.getFloat(4);
-            Einheit = abf.getInt(5);
-            Darreichungsform = abf.getInt(6);
-            Nebenwirkung = abf.getString(7);
-            EinnHinweis = abf.getString(8);
-            PackGroesse = abf.getFloat(9);
-            EinnEinheit = abf.getInt(10);
-
-            //TESTZWECKE: Gibt die gespeicherten Daten in Variablen im Log wieder
-            Log.d("MediAbfrage", "Folgendes Medikament wurde gefunden!");
-            Log.d("MediAbfrage", "MedID: " + MedID);
-            Log.d("MediAbfrage", "PZN: " + PZN);
-            Log.d("MediAbfrage", "Zuletzt Bearbeitet: " + ZuletztBearb);
-            Log.d("MediAbfrage", "Handelsname: " + Handelsname);
-            Log.d("MediAbfrage", "Staerke Dosis: " + Staerke_Dosis);
-            Log.d("MediAbfrage", "Einheit: " + Einheit);
-            Log.d("MediAbfrage", "Darreichungsform: " + Darreichungsform);
-            Log.d("MediAbfrage", "Nebenwirkung: " + Nebenwirkung);
-            Log.d("MediAbfrage", "EinnHinweis: " + EinnHinweis);
-            Log.d("MediAbfrage", "PackGroesse: " + PackGroesse);
-            Log.d("MediAbfrage", "EinnEinheit " + EinnEinheit);
-        } else {
-            //Fehlermeldung, wenn Medikament/PZN in Datenbank nicht vorhanden
-            Log.e("MediAbfrage", "Medikament mit der PZN " + pzn +" wurde nicht gefunden!");
-        }
     }
+
+   /* public boolean medikamentAnlegen(Medikament medikament){
+        // Stellt Verbindung mit Datenbank her
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Erstellt ein neues ContentValues-Objekt mit den Informationen des Medikaments
+        ContentValues values = new ContentValues();
+        values.put(MDB_COLUMN_PZN,medikament.PZN);
+        values.put(MDB_COLUMN_ZULETZTBEARB,medikament.ZuletztBearb);
+        values.put(MDB_COLUMN_HANDELSNAME,medikament.Handelsname);
+        values.put(MDB_COLUMN_STAERKEDOSIS,medikament.Staerke_Dosis);
+        values.put(MDB_COLUMN_EINHEIT,medikament.Einheit);
+        values.put(MDB_COLUMN_DARREICHNUNGSFORM,medikament.Darreichungsform);
+        values.put(MDB_COLUMN_NEBENWIRKUNG,medikament.Nebenwirkung);
+        values.put(MDB_COLUMN_EINNHINWEIS,medikament.EinnHinweis);
+        values.put(MDB_COLUMN_PACKGROESSE,medikament.PackGroesse);
+        values.put(MDB_COLUMN_EINNEINHEIT,medikament.EinnEinheit);
+
+        // Fügt den neuen Datensatz zur Datenbank hinzu und gibt das Ergebnis zurück
+        long result = db.insert(MDB_TABLE_NAME, null, values);
+        return result != -1;
+    } */
+
 
     // endregion Medikamente-Methoden
 
     // region User-Methoden
 
     //gibt zurück ob ein User existiert
-    public boolean existiertUser(User user){
+    public boolean existiertUser(){
         //SQL-Abfrage zum ausführen
-        String abfrage = "SELECT * FROM " + USR_TABLE_NAME;
+        String abfrage = "SELECT * FROM " + USR_TABLE_NAME+";";
         //Auf die Datenbank zugreifen
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor erstellen
@@ -612,14 +661,13 @@ public class DB_Tools extends SQLiteOpenHelper {
 
     //Legt den übergebenen User in die Datenbank
     // Gibt true zurück wenn erfolgreich, sonst false
-    public boolean userAnlegen(User user){
+    /*public boolean userAnlegen(User user){
 
         // Stellt Verbindung mit Datenbank her
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Erstellt ein neues ContentValues-Objekt mit den Informationen des Users
         ContentValues values = new ContentValues();
-        values.put(USR_COLUMN_USERID, user.UserID);
         values.put(USR_COLUMN_NUTZERNAME, user.NutzerName);
         values.put(USR_COLUMN_NUTZERVORNAME, user.NutzerVorname);
         values.put(USR_COLUMN_GEBURTSTAG, user.Geburtstag);
@@ -632,27 +680,27 @@ public class DB_Tools extends SQLiteOpenHelper {
     }
 
     //Gibt den User aus der Tabelle als ein User-Objekt zurück
-    //Gibt null zurück falls es keinen user gibt
+    //Gibt null zurück falls es keinen user gibt */
+   /* public User userAbfragen(){
 
- /*   public User userAbfragen(String nutzername){
+        //Abfrage erstellen
+        String abfrage = "SELECT * FROM "+USR_TABLE_NAME+";";
+
         // Stellt Verbindung mit Datenbank her
         SQLiteDatabase db = this.getReadableDatabase();
 
-        // Abfrage zum Abrufen des Benutzers bezüglich dem Benutzernamen
-        String[] columns = {"USR_COLUMN_NUTZERNAME", "USR_COLUMN_USERID", "USR_COLUMN_NUTZERVORNAME", "USR_COLUMN_GEBURTSTAG", "USR_COLUMN_ANLEGEDAT", "USR_COLUMN_ARZT"};
-        String selection = "USR_COLUMN_NUTZERNAME = ?";
-        String[] selectionArgs = {nutzername};
-        Cursor cursor = db.query("USR_TABLE_NAME", columns, selection, selectionArgs, null, null, null);
+        //Cursor mit Abfrage belegen
+        Cursor cursor = db.rawQuery(abfrage,null);
 
         // Prüft, ob die Abfrage ein Ergebnis zurückgibt und gibt den User als Objekt zurück
         if (cursor.moveToFirst()) {
             User user = new User();
-            user.UserID=(cursor.getInt(0));
-            user.NutzerName=(cursor.getString(1));
-            user.NutzerVorname=(cursor.getString(2));
-            user.Geburtstag=(cursor.getLong(3));
-            user.AnlageDat=(cursor.getLong(4));
-            user.Arzt=(cursor.getInt(5));
+            user.UserID=cursor.getInt(0);
+            user.NutzerName=cursor.getString(1);
+            user.NutzerVorname=cursor.getString(2);
+            user.Geburtstag=cursor.getLong(3);
+            user.AnlageDat=cursor.getLong(4);
+            user.Arzt=cursor.getInt(5);
             cursor.close();
             return user;
         } else {
@@ -661,43 +709,6 @@ public class DB_Tools extends SQLiteOpenHelper {
         }
     } */
 
-    public void userAbfrage(String nutzername) {
-        //SQL-Abfrage zum ausführen
-        String abfrage = "SELECT * FROM " + USR_TABLE_NAME + " WHERE " + USR_COLUMN_NUTZERNAME + " =  '" + nutzername + "'";
-        //Auf die Datenbank zugreifen
-        SQLiteDatabase db = this.getReadableDatabase();
-        //Cursor erstellen
-        Cursor cursor = db.rawQuery(abfrage, null);
-
-        //lokale Variablen deklariert
-        int UserID;
-        String NutzerName;
-        String NutzerVorname;
-        long Geburtstag;
-        long AnlageDat;
-        int Arzt;
-
-        //If-Abfrage, um abzufragen, ob es Datensätze gibt. Wenn ja, entsprechende Attribute in den zuvor definierten lokalen Variablen speichern
-        if (cursor.moveToFirst()) {
-            UserID = cursor.getInt(0);
-            NutzerName = cursor.getString(1);
-            NutzerVorname = cursor.getString(2);
-            Geburtstag = cursor.getLong(3);
-            AnlageDat = cursor.getLong(4);
-            Arzt = cursor.getInt(5);
-
-            //TESTZWECKE: Ausgabe des Users mit den einzelnen Variablen im Log
-            Log.d("UserAbfrage", "UserID: " + UserID);
-            Log.d("UserAbfrage", "NutzerName: " + NutzerName);
-            Log.d("UserAbfrage", "NutzerVorname: " + NutzerVorname);
-            Log.d("UserAbfrage", "Geburtstag: " + Geburtstag);
-            Log.d("UserAbfrage", "AnlageDat: " + AnlageDat);
-            Log.d("UserAbfrage", "Arzt: " + Arzt);
-        } else {
-            //Wenn User nicht vorhanden ist, dann im Log als Error ausgeben
-            Log.e("UserAbfrage", "User " + nutzername + " nicht gefunden!");
-        }
-    }
     // endregion User-Methoden
 
 }

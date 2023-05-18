@@ -1,45 +1,72 @@
 package hsnr.clemens.datenbank_grundlage;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
 import android.util.Log;
 
+import android.os.Bundle;
+
 public class MainActivity extends AppCompatActivity {
+
+    DB_Tools toolsi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DB_Tools toolsi = new DB_Tools(MainActivity.this);
+        toolsi = new DB_Tools(MainActivity.this);
         toolsi.ErstelleWennNichtDa();
-
-        //Erstelle neues Objekt newUser
-        User newUser = new User(1, "herbert69", "Herbert", 1577855592, 1683605592, 1);
-        //Überprüfe, ob newUser bereits existiert
-        boolean existiert = toolsi.existiertUser(newUser);
-        Log.d("LogIt", "Existiert newUser wirklich?: " + existiert);
-
-        //Wenn newUser nicht funktioniert, lege neuen User an und melde die Methode userAnlegen als erfolgreich
-        if(toolsi.existiertUser(newUser) == false) {
-            boolean success = toolsi.userAnlegen(newUser);
-            Log.d("LogIt", "Methode userAnlegen erfolgreich?: " + success);
-        }
-        //Gebe die Daten von herbert69 wieder, wenn User bekannt
-        toolsi.userAbfrage("herbert69");
-
-//Medikamententest
-
-        //Füge mit der Methode stammMediNeu neues Medikament in die Datenbank
-        toolsi.stammMediNeu(0, 12345,"Ibuprofen", 400, 1, 1,"Keine", "Keine", 50, 1);
-        //Lege neues Objekt ibu an
-        Medikament ibu = new Medikament(0, 12345, 1683614287, "Ibuprofen", 400, 1, 1,"Keine", "Keine", 50, 1);
-        //Prüfe, ob Medikament mit PZN in Datenbank vorhanden ist
-        //Wenn vorhanden, gebe Daten des Medikaments wieder;
-        toolsi.MedikamentZuPzn(12345);
-        toolsi.MedikamentZuPzn(1);
-
+        //TestMethodeUser();
+        //TestNachPzn(12345);
 
     }
+
+  /*  public void TestMethodeUser(){
+        Log.e("Debugger","Der Test beginnt ab jetzt");
+        boolean existiertUser = toolsi.existiertUser();
+        Log.e("Debugger","Gibt es einen User: "+existiertUser);
+        if(!existiertUser){
+            User daNewUser = new User("Horstsohn","Horst",61,84,69);
+            if(toolsi.userAnlegen(daNewUser)) Log.e("Debugger","Neuer User angelegt");
+            else Log.e("Debugger","Fehler beim Anlegen des neuen Users");
+
+        }
+        else{
+            User daExUser = toolsi.userAbfragen();
+            Log.e("Debugger","Es folgen die Stats zum User");
+            Log.e("Debugger","UserID: "+daExUser.UserID);
+            Log.e("Debugger","NutzeName: "+daExUser.NutzerName);
+            Log.e("Debugger","NutzerVorname: "+daExUser.NutzerVorname);
+            Log.e("Debugger","Geburtsdatum: "+daExUser.Geburtstag);
+            Log.e("Debugger","AnlegeDat: "+daExUser.AnlageDat);
+            Log.e("Debugger","Arzt: "+daExUser.Arzt);
+        }
+    } */
+
+    /*public void TestAddMedi(int testPzn){
+        Medikament insertMedi = new Medikament(testPzn,13,"Irkosonat",3,5,1,"aua","mit Wasser",7,5);
+        if(toolsi.medikamentAnlegen(insertMedi)) Log.e("Debugger","Neues Medikament angelegt");
+        else Log.e("Debugger","Fehler beim Anlegen des neuen Medikaments");
+    } */
+    /*public void TestNachPzn(int testPzn){
+        Medikament datMedi = toolsi.MedikamentZuPzn(testPzn);
+        if(datMedi == null) {
+            Log.e("Debugger","Es existiert kein Medikament mit der PZN");
+            TestAddMedi(testPzn);
+        }
+        else{
+            Log.e("Debugger","Es folgen die Stats zum medikament mit PZN "+testPzn);
+            Log.e("Debugger","MedID: "+datMedi.MedID);
+            Log.e("Debugger","PZN: "+datMedi.PZN);
+            Log.e("Debugger","zuletztBearbeit: "+datMedi.ZuletztBearb);
+            Log.e("Debugger","Handelsname: "+datMedi.Handelsname);
+            Log.e("Debugger","Staerke_dosis: "+datMedi.Staerke_Dosis);
+            Log.e("Debugger","Einheit: "+datMedi.Einheit);
+            Log.e("Debugger","Darreichungsform: "+datMedi.Darreichungsform);
+            Log.e("Debugger","Nebenwirkung: "+datMedi.Nebenwirkung);
+            Log.e("Debugger","EinnHinweis: "+datMedi.EinnHinweis);
+            Log.e("Debugger","PackGroesse: "+datMedi.PackGroesse);
+            Log.e("Debugger","EinnEinheit: "+datMedi.EinnEinheit);
+        }
+    } */
 }
