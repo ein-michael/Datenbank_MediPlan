@@ -608,6 +608,26 @@ public class DB_Tools extends SQLiteOpenHelper {
         }
     }
 
+    public Medikament MedikamentZuName(String medikamentenname){
+        //SQL Lite Abfrage
+        String MediNameabfrage = "SELECT * FROM " + MDB_TABLE_NAME + " WHERE "+ MDB_COLUMN_HANDELSNAME + " = " + medikamentenname+" AND "+MDB_COLUMN_ISVALID+" = 1;";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor abf = db.rawQuery(MediNameabfrage,null);
+
+        if (abf.moveToFirst()) {
+
+            Medikament md = MedikamentZuID(abf.getInt(0));
+            abf.close();
+            return md;
+        }
+        else {
+            // Kein Treffer gefunden
+            return null;
+        }
+    }
+
    /* public boolean medikamentAnlegen(Medikament medikament){
         // Stellt Verbindung mit Datenbank her
         SQLiteDatabase db = this.getWritableDatabase();
